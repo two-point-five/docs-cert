@@ -1,0 +1,1165 @@
+openapi: 3.0.3
+info:
+  title: NFT Certificate
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: "https://example.com"
+paths:
+  
+# AUTH
+  /auth/sign-in:
+    post:
+      tags:
+        - Auth
+      summary: Sign In
+      description: Sign In
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number:
+                  type: string
+                  example: "628123456789"
+            example:
+              phone_number: "628123456789"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success request OTP
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success request OTP
+                    status: success
+  /auth/otp/verification/sign-in:
+    post:
+      tags:
+        - Auth
+      summary: Verify OTP for Sign In
+      description: Verify OTP for Sign In
+      operationId: verifyOtpForSignIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: "315865"
+                phone_number:
+                  type: string
+                  example: "628123456789"
+            example:
+              otp: "315865"
+              phone_number: "628123456789"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: >-
+                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NDQzLCJpYXQiOjE2NzQ1NTM0NDN9.xYQJ3xB4PrRczGn_oYFhqrwwDulYfERpNGHE9g6zDd8
+                  message:
+                    type: string
+                    example: OTP is valid
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data:
+                      token: >-
+                        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NDQzLCJpYXQiOjE2NzQ1NTM0NDN9.xYQJ3xB4PrRczGn_oYFhqrwwDulYfERpNGHE9g6zDd8
+                    message: OTP is valid
+                    status: success
+  /auth/pin/create:
+    post:
+      tags:
+        - Auth
+      summary: Set PIN
+      description: Set PIN
+      operationId: setPin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pin:
+                  type: string
+                  example: "123456"
+            example:
+              pin: "123456"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: PIN is updated. Please refresh token
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data: null
+                    message: PIN is updated. Please refresh token
+                    status: success
+  /auth/refresh-token:
+    get:
+      tags:
+        - Auth
+      summary: Refresh Token
+      description: Refresh Token
+      operationId: refreshToken
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: >-
+                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NTUwLCJpYXQiOjE2NzQ1NTM1NTB9._Kq6ydFHnT4h2rTMPJzXGe7f16nZOuV9yD5J-68Qs78
+                  message:
+                    type: string
+                    example: Token refreshed
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data:
+                      token: >-
+                        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NTUwLCJpYXQiOjE2NzQ1NTM1NTB9._Kq6ydFHnT4h2rTMPJzXGe7f16nZOuV9yD5J-68Qs78
+                    message: Token refreshed
+                    status: success
+ 
+# USER
+  /users/me:
+    patch:
+      tags:
+        - User
+      summary: Update profile
+      description: Update profile
+      operationId: updateUserOwnProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "johnDoe123"
+            example:
+              username: "johnDoe123"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success update profile
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success update profile
+                    status: success
+    get:
+      tags:
+        - User
+      summary: Get profile
+      description: Get profile
+      operationId: getUserOwnProfile
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      uid:
+                        $ref: "#/components/schemas/UUID"
+                      username:
+                        type: string
+                        example: johnDoe123
+                      wallet_address:
+                        type: string
+                        example: "0x95D2B960138fc731D2a9D7D71067B279aCdd9fed"
+                      created_at:
+                        $ref: "#/components/schemas/DateISO"
+                      updated_at:
+                        $ref: "#/components/schemas/DateISO"
+                  message:
+                    type: string
+                    example: success update profile
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get profile
+                    status: success
+                    data:
+                      uid: 0ujsswThIGTUYm2K8FjOOfXtY1K
+                      username: johnDoe123
+                      wallet_address: 0x95D2B960138fc731D2a9D7D71067B279aCdd9fed
+                      created_at: 2011-06-20T14:48:00.000Z
+                      updated_at: 2011-06-20T14:48:00.000Z
+
+# Verify
+  /verify:
+    get:
+      tags:
+        - Verify
+      summary: Verify Certificate
+      description: Verify Certificate
+      operationId: verifyCertificate
+      parameters:
+        - in: query
+          name: certificate_id
+          required: true
+          type: string
+          example: "ALTA/01/2022/01"
+        - in: query
+          name: full_name
+          required: true
+          type: string
+          example: "David Boy"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      verified:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - status
+                            - contract_address
+                            - nft_uid
+                          properties:
+                            status:
+                              type: string
+                              example: "found"
+                            contract_address:
+                              type: string
+                              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+                            nft_uid:
+                              $ref: "#/components/schemas/UUID"
+                  message:
+                    type: string
+                    example: success certificate valid
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success certificate valid
+                    status: success
+                    data:
+                      verified:
+                        - status: 2
+                          contract_address: 0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF
+                          $ref: "#/components/schemas/UUID"
+      
+# Networks
+  /networks:
+    get:
+      tags:
+        - Network
+      summary: Get networks
+      description: Get networks
+      operationId: getNetworks
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      networks:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - id
+                            - img_url
+                            - currency_img_url
+                            - name
+                            - currency_name
+                            - currency_symbol
+                            - currency_decimals
+                            - state
+                            - created_at
+                            - updated_at
+                          properties:
+                            id:
+                              $ref: "#/components/schemas/ID"
+                            img_url:
+                              type: string
+                              example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                            currency_img_url:
+                              type: string
+                              example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                            name:
+                              type: string
+                              example: ethereum
+                            currency_name:
+                              type: string
+                              example: ether
+                            currency_symbol:
+                              type: string
+                              example: ETH
+                            currency_decimals:
+                              type: number
+                              example: 16
+                            state:
+                              $ref: "#/components/schemas/StateEnum"
+                            created_at:
+                              $ref: "#/components/schemas/DateISO"
+                            updated_at:
+                              $ref: "#/components/schemas/DateISO"
+                  message:
+                    type: string
+                    example: success get networks
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get networks
+                    status: success
+                    data:
+                      networks:
+                        - id: 2
+                          img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                          currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                          name: ethereum
+                          currency_name: ether
+                          currency_symbol: ETH
+                          currency_decimals: 16
+                          state: ACTIVE
+                          created_at: 2011-06-20T14:48:00.000Z
+                          updated_at: 2011-06-20T14:48:00.000Z
+  /networks/{network_id}:
+    get:
+      tags:
+        - Network
+      summary: Get network detail
+      description: Get network detail
+      operationId: getNetworkDetail
+      parameters:
+        - $ref: "#/components/parameters/NetworkUID"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - id
+                      - img_url
+                      - currency_img_url
+                      - name
+                      - currency_name
+                      - currency_symbol
+                      - currency_decimals
+                      - state
+                      - created_at
+                      - updated_at
+                    properties:
+                      id:
+                        $ref: "#/components/schemas/ID"
+                      img_url:
+                        type: string
+                        example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      currency_img_url:
+                        type: string
+                        example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      name:
+                        type: string
+                        example: ethereum
+                      currency_name:
+                        type: string
+                        example: ether
+                      currency_symbol:
+                        type: string
+                        example: ETH
+                      currency_decimals:
+                        type: number
+                        example: 16
+                      state:
+                        $ref: "#/components/schemas/StateEnum"
+                      created_at:
+                        $ref: "#/components/schemas/DateISO"
+                      updated_at:
+                        $ref: "#/components/schemas/DateISO"
+                  message:
+                    type: string
+                    example: success get networks
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get networks
+                    status: success
+                    data:
+                      id: 2
+                      img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      name: ethereum
+                      currency_name: ether
+                      currency_symbol: ETH
+                      currency_decimals: 16
+                      state: ACTIVE
+                      created_at: 2011-06-20T14:48:00.000Z
+                      updated_at: 2011-06-20T14:48:00.000Z                      
+                      
+# Projects
+  /projects:
+    post:
+        tags:
+          - Project
+        summary: Create project
+        description: Create project
+        operationId: createProject
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - description
+                  - symbol
+                  - network_id
+                properties:
+                  name:
+                    type: string
+                    example: "Graduation 2022"
+                  description:
+                    type: string
+                    example: "Certificate of Graduation Class 2022"
+                  symbol:
+                    type: string
+                    example: "GG2022"
+                  network_id:
+                    $ref: "#/components/schemas/ID"
+              example:
+                name: Graduation 2022
+                description: Certificate of Graduation Class 2022
+                symbol: GG2022
+                network_id: 2
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+  /projects/me:
+    get:
+        tags:
+          - Project
+        summary: Get user project
+        description: Get user project
+        operationId: getMyProject
+        parameters:
+          - $ref: "#/components/parameters/Page"
+          - $ref: "#/components/parameters/Limit"
+          - name: query_nft
+            in: query
+            description: Query nfts
+            schema:
+              type: number
+              default: 0
+              maximum: 10
+              example: 5
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        projects:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/ProjectList"
+                    message:
+                      type: string
+                      example: success get project
+                    status:
+                      type: string
+                      example: success
+  /projects/{project_uid}:
+    put:
+        tags:
+          - Project
+        summary: update project
+        description: update project
+        operationId: updateProjectDetail
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - description
+                  - symbol
+                  - network_id
+                properties:
+                  name:
+                    type: string
+                    example: "Graduation 2022"
+                  description:
+                    type: string
+                    example: "Certificate of Graduation Class 2022"
+                  symbol:
+                    type: string
+                    example: "GG2022"
+                  network_id:
+                    $ref: "#/components/schemas/ID"
+              example:
+                name: Graduation 2022
+                description: Certificate of Graduation Class 2022
+                symbol: GG2022
+                network_id: 2
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success update project
+                    status:
+                      type: string
+                      example: success
+    get:
+        tags:
+          - Project
+        summary: Get project detail
+        description: Get project detail
+        operationId: getProjectDetail
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success get project
+                    status:
+                      type: string
+                      example: success
+  /projects/{project_uid}/launch:
+    post:
+        tags:
+          - Project
+        summary: Launch project
+        description: Launch project
+        operationId: launchProject
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success                      
+
+# NFTs
+  /nfts:
+    post:
+        tags:
+          - NFT
+        summary: Create nft of project
+        description: Create nft of project
+        operationId: createProjectNFT
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDQuery"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token_id
+                  - metadata
+                  - project_uid
+                properties:
+                  project_uid:
+                    $ref: "#/components/schemas/UUID"
+                  token_id:
+                    type: string
+                    nullable: true
+                    example: "123456"
+                  is_explicit:
+                    type: boolean
+                    example: true
+                  metadata:
+                    type: object
+                    nullable: true
+                    example:
+                      certificate_id: ALTA/01/2022/01
+                      full_name: David Boy
+                      image: external-link-url/image.png
+                    properties:
+                      certificate_id:
+                        type: string
+                        example: "ALTA/01/2022/01"
+                      full_name:
+                        type: string
+                        example: "David Boy"
+                      attributes:
+                        nullable: true
+                        type: object
+                        properties:
+                          trait_type:
+                            type: string
+                            example: "Math"
+                          value:
+                            anyOf:
+                              - type: string
+                              - type: number
+                              - type: integer
+                              - type: boolean
+                              - type: array
+                                items: {}
+                              - type: object
+                            example: 10
+              example:
+                project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
+                token_id: 123456
+                is_explicit: true
+                metadata: 
+                  name: ALTA/01/2022/01
+                  description: David Boy
+                  attributes:
+                    - trait_type: Math
+                      value: 10
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+    get:
+        tags:
+          - NFT
+        summary: get nft list of project
+        description: get nft list of project
+        operationId: getProjectNFTs
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDQuery"
+          - $ref: "#/components/parameters/Page"
+          - $ref: "#/components/parameters/Limit"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success                    
+  /nfts/{nft_uid}:
+    get:
+        tags:
+          - NFT
+        summary: get project NFT
+        description: get project NFT
+        operationId: getProjectNFTDetail
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+    put:
+        tags:
+          - NFT
+        summary: update nft of project
+        description: update nft of project
+        operationId: updateProjectNFT
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token_id
+                  - metadata
+                  - project_uid
+                properties:
+                  token_id:
+                    type: string
+                    nullable: true
+                    example: "123456"
+                  is_explicit:
+                    type: boolean
+                    example: true
+                  metadata:
+                    type: object
+                    nullable: true
+                    example:
+                      certificate_id: ALTA/01/2022/01
+                      full_name: David Boy
+                      image: external-link-url/image.png
+                    properties:
+                      certificate_id:
+                        type: string
+                        example: "ALTA/01/2022/01"
+                      full_name:
+                        type: string
+                        example: "David Boy"
+                      attributes:
+                        nullable: true
+                        type: object
+                        properties:
+                          trait_type:
+                            type: string
+                            example: "Math"
+                          value:
+                            anyOf:
+                              - type: string
+                              - type: number
+                              - type: integer
+                              - type: boolean
+                              - type: array
+                                items: {}
+                              - type: object
+                            example: 10
+              example:
+                project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
+                token_id: 123456
+                is_explicit: true
+                metadata: 
+                  certificate_id: ALTA/01/2022/01
+                  full_name: David Boy
+                  attributes:
+                    - trait_type: Math
+                      value: 10
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+    delete:
+        tags:
+          - NFT
+        summary: Delete project NFT
+        description: Delete project NFT
+        operationId: deleteProjectNFT
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: success delete NFT
+                    status:
+                      type: string
+                      example: success
+
+components:
+  schemas:
+    ID:
+      type: number
+      description: SQL auto increment ID
+      example: 1
+    DateISO:
+      type: string
+      description: "ISO 8601"
+      example: "2011-06-20T14:48:00.000Z"
+    UUID:
+      type: string
+      example: 0ujsswThIGTUYm2K8FjOOfXtY1K
+    StateEnum:
+      type: string
+      description: >
+        State of record:
+          * `ACTIVE` - Active state
+          * `INACTIVE` - Inactive state
+      enum: ["ACTIVE", "INACTIVE"]
+      example: "ACTIVE"
+    ProjectBase:
+      type: object
+      required:
+        - uid
+        - name
+        - description
+        - symbol
+        - contract_address
+        - creator
+      properties:
+        creator:
+          type: object
+          properties:
+            uid:
+              $ref: "#/components/schemas/UUID"
+            username:
+              type: string
+              example: "Alterra"
+        uid:
+          $ref: "#/components/schemas/UUID"
+        network_id:
+          $ref: "#/components/schemas/ID"
+        name:
+          type: string
+          example: "Graduation 2022"
+        description:
+          type: string
+          example: "Certificate of Graduation Class 2022"
+        symbol:
+          type: string
+          example: "PFID"
+        nft_count:
+          type: number
+          example: 5
+        contract_address:
+              type: string
+              nullable: true
+              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+    ProjectList:
+      allOf:
+        - $ref: '#/components/schemas/ProjectBase'
+        - type: object
+          required:
+            - nft_count
+          properties:
+            nft_count:
+              type: number
+              example: 5
+            nfts:
+              type: array
+              nullable: true
+              items:
+                type: object
+                properties:
+                  uid:
+                    $ref: "#/components/schemas/UUID"
+                  image_url:
+                    type: string
+                    example: external-link-url/image.png
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/ProjectBase'
+        - type: object
+          required:
+            - contract_metadata
+            - trx_hash
+            - created_at
+            - updated_at
+          properties:
+            contract_metadata:
+              type: object
+              nullable: true
+              example:
+                certificate_id: "ALTA/01/2022/01"
+                full_name: "David Boy"
+                image: external-link-url/image.png
+                external_link: external-link-url
+            trx_hash:
+              type: string
+              nullable: true
+              example: null
+            created_at:
+              $ref: "#/components/schemas/DateISO"
+            updated_at:
+              $ref: "#/components/schemas/DateISO"
+    NFT:
+      type: object
+      required:
+        - uid
+        - token_id
+        - image_url
+        - metadata_json
+        - is_explicit
+      properties:
+        uid:
+          $ref: "#/components/schemas/UUID"
+        project_uid:
+          $ref: "#/components/schemas/UUID"
+        network_id:
+          $ref: "#/components/schemas/ID"
+        token_id:
+          type: string
+          nullable: true
+          example: "1234"
+        is_explicit:
+          type: boolean
+          example: true
+        metadata_json:
+          type: object
+          required:
+            - certificate_id
+            - full_name
+            - image
+            - attributes
+          properties:
+            certificate_id:
+              type: string
+              example: "ALTA/01/2022/01"
+            full_name:
+              type: string
+              example: "David Boy"
+            image:
+              type: string
+              example: external-link-url/image.png
+            attributes:
+              nullable: true
+              type: object
+              properties:
+                trait_type:
+                  type: string
+                  example: "Math"
+                value:
+                  anyOf:
+                    - type: string
+                    - type: number
+                    - type: integer
+                    - type: boolean
+                    - type: array
+                      items: {}
+                    - type: object
+                  example: 10
+          nullable: true
+          example:
+            certificate_id: ALTA/01/2022/01
+            full_name: David Boy
+            image: external-link-url/image.png
+            attributes:
+              - trait_type: Math
+                value: 10
+        project:
+          type: object
+          required:
+            - uid
+            - name
+          properties:
+            uid:
+              $ref: "#/components/schemas/UUID"
+            name:
+              type: string
+              example: "Project name"
+        created_at:
+          $ref: "#/components/schemas/DateISO"
+        updated_at:
+          $ref: "#/components/schemas/DateISO"
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page that should be returned
+      required: false
+      schema:
+        type: number
+        example: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      description: Number of objects to return
+      required: false
+      schema:
+        type: number
+        example: 20
+        default: 10
+        maximum: 50
+    ProjectUIDPath:
+      name: project_uid
+      in: query
+      description: Project UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    ProjectUIDQuery:
+      name: project_uid
+      in: query
+      description: Project UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    NFTUID:
+      name: nft_uid
+      in: path
+      description: NFT UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    NetworkUID:
+      name: network_id
+      in: path
+      description: Network ID
+      required: true
+      schema:
+        type: number
+        example: 1
+tags:
+  - name: Auth
+  - name: User
+  - name: Project
+  - name: NFT
+  - name: Network
