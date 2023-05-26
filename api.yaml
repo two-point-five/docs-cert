@@ -4,11 +4,20 @@ info:
   version: 1.0.0
   contact: {}
 servers:
-  - url: "https://example.com"
+  - url: "https://api-staging.nftpedia.id"
+    description: Sandbox server (uses test data)
+  - url: "https://api.nftpedia.id"
+    description: Production server (uses live data)
+    
 paths:
   
 # AUTH
   /auth/sign-in:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Sandbox server (uses test data)
+      - url: "https://beta-api.2p5.io"
+        description: Production server (uses live data)
     post:
       tags:
         - Auth
@@ -46,6 +55,11 @@ paths:
                     message: success request OTP
                     status: success
   /auth/otp/verification/sign-in:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Sandbox server (uses test data)
+      - url: "https://beta-api.2p5.io"
+        description: Production server (uses live data)
     post:
       tags:
         - Auth
@@ -97,6 +111,11 @@ paths:
                     message: OTP is valid
                     status: success
   /auth/pin/create:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Sandbox server (uses test data)
+      - url: "https://beta-api.2p5.io"
+        description: Production server (uses live data)
     post:
       tags:
         - Auth
@@ -138,6 +157,11 @@ paths:
                     message: PIN is updated. Please refresh token
                     status: success
   /auth/refresh-token:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Sandbox server (uses test data)
+      - url: "https://beta-api.2p5.io"
+        description: Production server (uses live data)
     get:
       tags:
         - Auth
@@ -271,13 +295,15 @@ paths:
         - in: query
           name: certificate_id
           required: true
-          type: string
-          example: "ALTA/01/2022/01"
+          schema:
+            type: string
+            example: "ALTA/01/2022/01"
         - in: query
           name: full_name
           required: true
-          type: string
-          example: "David Boy"
+          schema:
+            type: string
+            example: "David Boy"
       responses:
         "200":
           description: Success
@@ -1130,7 +1156,7 @@ components:
         maximum: 50
     ProjectUIDPath:
       name: project_uid
-      in: query
+      in: path
       description: Project UID
       required: true
       schema:
