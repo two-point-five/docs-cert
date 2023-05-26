@@ -179,8 +179,8 @@ paths:
     patch:
       tags:
         - User
-      summary: Update profile
-      description: Update profile
+      summary: Update Profile
+      description: Update Profile
       operationId: updateUserOwnProfile
       requestBody:
         content:
@@ -215,8 +215,8 @@ paths:
     get:
       tags:
         - User
-      summary: Get profile
-      description: Get profile
+      summary: Get Profile
+      description: Get Profile
       operationId: getUserOwnProfile
       responses:
         "200":
@@ -328,8 +328,8 @@ paths:
     get:
       tags:
         - Network
-      summary: Get networks
-      description: Get networks
+      summary: Get Networks
+      description: Get Networks
       operationId: getNetworks
       responses:
         "200":
@@ -411,8 +411,8 @@ paths:
     get:
       tags:
         - Network
-      summary: Get network detail
-      description: Get network detail
+      summary: Get Network Detail
+      description: Get Network Detail
       operationId: getNetworkDetail
       parameters:
         - $ref: "#/components/parameters/NetworkUID"
@@ -492,8 +492,8 @@ paths:
     post:
         tags:
           - Project
-        summary: Create project
-        description: Create project
+        summary: Create Project
+        description: Create Project
         operationId: createProject
         requestBody:
           content:
@@ -542,8 +542,8 @@ paths:
     get:
         tags:
           - Project
-        summary: Get user project
-        description: Get user project
+        summary: Get User Project
+        description: Get User Project
         operationId: getMyProject
         parameters:
           - $ref: "#/components/parameters/Page"
@@ -581,8 +581,8 @@ paths:
     put:
         tags:
           - Project
-        summary: update project
-        description: update project
+        summary: Update Project
+        description: Update Project
         operationId: updateProjectDetail
         parameters:
           - $ref: "#/components/parameters/ProjectUIDPath"
@@ -632,8 +632,8 @@ paths:
     get:
         tags:
           - Project
-        summary: Get project detail
-        description: Get project detail
+        summary: Get Project Detail
+        description: Get Project Detail
         operationId: getProjectDetail
         parameters:
           - $ref: "#/components/parameters/ProjectUIDPath"
@@ -657,8 +657,8 @@ paths:
     post:
         tags:
           - Project
-        summary: Launch project
-        description: Launch project
+        summary: Launch Project
+        description: Launch Project
         operationId: launchProject
         parameters:
           - $ref: "#/components/parameters/ProjectUIDPath"
@@ -684,8 +684,8 @@ paths:
     post:
         tags:
           - NFT
-        summary: Create nft of project
-        description: Create nft of project
+        summary: Create NFT of Project
+        description: Create NFT of Project
         operationId: createProjectNFT
         parameters:
           - $ref: "#/components/parameters/ProjectUIDQuery"
@@ -768,8 +768,8 @@ paths:
     get:
         tags:
           - NFT
-        summary: get nft list of project
-        description: get nft list of project
+        summary: Get NFT List of Project
+        description: Get NFT List of Project
         operationId: getProjectNFTs
         parameters:
           - $ref: "#/components/parameters/ProjectUIDQuery"
@@ -797,8 +797,8 @@ paths:
     get:
         tags:
           - NFT
-        summary: get project NFT
-        description: get project NFT
+        summary: Get Project NFT
+        description: Get Project NFT
         operationId: getProjectNFTDetail
         parameters:
           - $ref: "#/components/parameters/NFTUID"
@@ -821,8 +821,8 @@ paths:
     put:
         tags:
           - NFT
-        summary: update nft of project
-        description: update nft of project
+        summary: Update NFT of Project
+        description: Update NFT of Project
         operationId: updateProjectNFT
         parameters:
           - $ref: "#/components/parameters/NFTUID"
@@ -903,8 +903,8 @@ paths:
     delete:
         tags:
           - NFT
-        summary: Delete project NFT
-        description: Delete project NFT
+        summary: Delete Project NFT
+        description: Delete Project NFT
         operationId: deleteProjectNFT
         parameters:
           - $ref: "#/components/parameters/NFTUID"
