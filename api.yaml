@@ -4,20 +4,20 @@ info:
   version: 1.0.0
   contact: {}
 servers:
-  - url: "https://api-staging.nftpedia.id"
-    description: Sandbox server (uses test data)
-  - url: "https://api.nftpedia.id"
-    description: Production server (uses live data)
+  - url: "http://localhost:8081"
+    description: NFT API
+  - url: "https://staging-api.2p5.io"
+    description: Staging Wallet Server
     
 paths:
   
 # AUTH
   /auth/sign-in:
     servers:
+      - url: "http://localhost:8081"
+        description: NFT API
       - url: "https://staging-api.2p5.io"
-        description: Sandbox server (uses test data)
-      - url: "https://beta-api.2p5.io"
-        description: Production server (uses live data)
+        description: Staging Wallet Server
     post:
       tags:
         - Auth
@@ -32,9 +32,9 @@ paths:
               properties:
                 phone_number:
                   type: string
-                  example: "628123456789"
+                  example: "6285273839851"
             example:
-              phone_number: "628123456789"
+              phone_number: "6285273839851"
       responses:
         "200":
           description: Success
@@ -43,23 +43,27 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                    example: success request OTP
                   status:
+                    type: string
+                    example: success
+                  mesage:
+                    type: string
+                    example: OTP was sent to xx
+                  data:
                     type: string
                     example: success
               examples:
                 Success:
                   value:
-                    message: success request OTP
                     status: success
-  /auth/otp/verification/sign-in:
+                    message: success request OTP
+                    data: success
+  /v2/auth/otp/verification/sign-in:
     servers:
-      - url: "https://staging-api.2p5.io"
-        description: Sandbox server (uses test data)
-      - url: "https://beta-api.2p5.io"
-        description: Production server (uses live data)
+        - url: "http://localhost:8081"
+          description: NFT API
+        - url: "https://staging-api.2p5.io"
+          description: Staging Wallet Server
     post:
       tags:
         - Auth
@@ -77,10 +81,10 @@ paths:
                   example: "315865"
                 phone_number:
                   type: string
-                  example: "628123456789"
+                  example: "6285273839851"
             example:
               otp: "315865"
-              phone_number: "628123456789"
+              phone_number: "6285273839851"
       responses:
         "200":
           description: Success
@@ -112,10 +116,10 @@ paths:
                     status: success
   /auth/pin/create:
     servers:
+      - url: "http://localhost:8081"
+        description: NFT API
       - url: "https://staging-api.2p5.io"
-        description: Sandbox server (uses test data)
-      - url: "https://beta-api.2p5.io"
-        description: Production server (uses live data)
+        description: Staging Wallet Server
     post:
       tags:
         - Auth
@@ -156,12 +160,13 @@ paths:
                     data: null
                     message: PIN is updated. Please refresh token
                     status: success
-  /auth/refresh-token:
+  /v2/auth/refresh-token:
     servers:
+      - url: "http://localhost:8081"
+        description: NFT API
       - url: "https://staging-api.2p5.io"
-        description: Sandbox server (uses test data)
-      - url: "https://beta-api.2p5.io"
-        description: Production server (uses live data)
+        description: Staging Wallet Server
+      
     get:
       tags:
         - Auth
@@ -201,6 +206,8 @@ paths:
 # USER
   /users/me:
     patch:
+      security:
+        - bearerAuth: []
       tags:
         - User
       summary: Update Profile
@@ -237,6 +244,8 @@ paths:
                     message: success update profile
                     status: success
     get:
+      security:
+        - bearerAuth: []
       tags:
         - User
       summary: Get Profile
@@ -258,13 +267,18 @@ paths:
                       username:
                         type: string
                         example: johnDoe123
+                      remote_id:
+                        type: int
+                        example: 1
+                      phone_number:
+                        type: string
+                        example: "6285273839851"
                       wallet_address:
                         type: string
                         example: "0x95D2B960138fc731D2a9D7D71067B279aCdd9fed"
-                      created_at:
-                        $ref: "#/components/schemas/DateISO"
-                      updated_at:
-                        $ref: "#/components/schemas/DateISO"
+                      is_activated:
+                        type: bool
+                        example: false
                   message:
                     type: string
                     example: success update profile
@@ -279,9 +293,10 @@ paths:
                     data:
                       uid: 0ujsswThIGTUYm2K8FjOOfXtY1K
                       username: johnDoe123
-                      wallet_address: 0x95D2B960138fc731D2a9D7D71067B279aCdd9fed
-                      created_at: 2011-06-20T14:48:00.000Z
-                      updated_at: 2011-06-20T14:48:00.000Z
+                      remote_id: 1
+                      phone_number: '6285273839851'
+                      wallet_address: '0x95D2B960138fc731D2a9D7D71067B279aCdd9fed'
+                      is_activated: false
 
 # Verify
   /verify:
@@ -352,6 +367,8 @@ paths:
 # Networks
   /networks:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Network
       summary: Get Networks
@@ -376,13 +393,12 @@ paths:
                             - id
                             - img_url
                             - currency_img_url
+                            - api_base_url
                             - name
                             - currency_name
                             - currency_symbol
                             - currency_decimals
-                            - state
-                            - created_at
-                            - updated_at
+                            - status
                           properties:
                             id:
                               $ref: "#/components/schemas/ID"
@@ -392,6 +408,9 @@ paths:
                             currency_img_url:
                               type: string
                               example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                            api_base_url:
+                              type: string
+                              example: https://staging-api.2p5.io
                             name:
                               type: string
                               example: ethereum
@@ -404,12 +423,9 @@ paths:
                             currency_decimals:
                               type: number
                               example: 16
-                            state:
-                              $ref: "#/components/schemas/StateEnum"
-                            created_at:
-                              $ref: "#/components/schemas/DateISO"
-                            updated_at:
-                              $ref: "#/components/schemas/DateISO"
+                            status:
+                              type: string
+                              example: active
                   message:
                     type: string
                     example: success get networks
@@ -426,15 +442,16 @@ paths:
                         - id: 2
                           img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
                           currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                          api_base_url: https://staging-api.2p5.io
                           name: ethereum
                           currency_name: ether
                           currency_symbol: ETH
                           currency_decimals: 16
-                          state: ACTIVE
-                          created_at: 2011-06-20T14:48:00.000Z
-                          updated_at: 2011-06-20T14:48:00.000Z
+                          status: active
   /networks/{network_id}:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Network
       summary: Get Network Detail
@@ -456,13 +473,12 @@ paths:
                       - id
                       - img_url
                       - currency_img_url
+                      - api_base_url
                       - name
                       - currency_name
                       - currency_symbol
                       - currency_decimals
-                      - state
-                      - created_at
-                      - updated_at
+                      - status
                     properties:
                       id:
                         $ref: "#/components/schemas/ID"
@@ -472,6 +488,9 @@ paths:
                       currency_img_url:
                         type: string
                         example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      api_base_url:
+                        type: string
+                        example: https://staging-api.2p5.io
                       name:
                         type: string
                         example: ethereum
@@ -484,12 +503,9 @@ paths:
                       currency_decimals:
                         type: number
                         example: 16
-                      state:
-                        $ref: "#/components/schemas/StateEnum"
-                      created_at:
-                        $ref: "#/components/schemas/DateISO"
-                      updated_at:
-                        $ref: "#/components/schemas/DateISO"
+                      status:
+                        type: string
+                        example: active
                   message:
                     type: string
                     example: success get networks
@@ -505,17 +521,18 @@ paths:
                       id: 2
                       img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
                       currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      api_base_url: https://staging-api.2p5.io
                       name: ethereum
                       currency_name: ether
                       currency_symbol: ETH
                       currency_decimals: 16
-                      state: ACTIVE
-                      created_at: 2011-06-20T14:48:00.000Z
-                      updated_at: 2011-06-20T14:48:00.000Z                      
+                      status: active                      
                       
 # Projects
   /projects:
     post:
+        security:
+          - bearerAuth: []
         tags:
           - Project
         summary: Create Project
@@ -547,7 +564,7 @@ paths:
                 name: Graduation 2022
                 description: Certificate of Graduation Class 2022
                 symbol: GG2022
-                network_id: 2
+                network_id: 1
         responses:
           "200":
             description: Success
@@ -566,6 +583,8 @@ paths:
                       example: success
   /projects/me:
     get:
+        security:
+          - bearerAuth: []
         tags:
           - Project
         summary: Get User Project
@@ -605,6 +624,8 @@ paths:
                       example: success
   /projects/{project_uid}:
     put:
+        security:
+          - bearerAuth: []
         tags:
           - Project
         summary: Update Project
@@ -656,6 +677,8 @@ paths:
                       type: string
                       example: success
     get:
+        security:
+          - bearerAuth: []
         tags:
           - Project
         summary: Get Project Detail
@@ -681,6 +704,8 @@ paths:
                       example: success
   /projects/{project_uid}/launch:
     post:
+        security:
+          - bearerAuth: []
         tags:
           - Project
         summary: Launch Project
@@ -708,90 +733,92 @@ paths:
 # NFTs
   /nfts:
     post:
-        tags:
-          - NFT
-        summary: Create NFT of Project
-        description: Create NFT of Project
-        operationId: createProjectNFT
-        parameters:
-          - $ref: "#/components/parameters/ProjectUIDQuery"
-        requestBody:
+      security:
+        - bearerAuth: []
+      tags:
+        - NFT
+      summary: Create NFT of Project
+      description: Create NFT of Project
+      operationId: createProjectNFT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token_id
+                - metadata
+                - project_uid
+              properties:
+                project_uid:
+                  $ref: "#/components/schemas/UUID"
+                token_id:
+                  type: string
+                  nullable: true
+                  example: "123456"
+                is_explicit:
+                  type: boolean
+                  example: true
+                metadata:
+                  type: object
+                  nullable: true
+                  example:
+                    certificate_id: ALTA/01/2022/01
+                    full_name: David Boy
+                    image: external-link-url/image.png
+                  properties:
+                    certificate_id:
+                      type: string
+                      example: "ALTA/01/2022/01"
+                    full_name:
+                      type: string
+                      example: "David Boy"
+                    attributes:
+                      nullable: true
+                      type: object
+                      properties:
+                        trait_type:
+                          type: string
+                          example: "Math"
+                        value:
+                          anyOf:
+                            - type: string
+                            - type: number
+                            - type: integer
+                            - type: boolean
+                            - type: array
+                              items: {}
+                            - type: object
+                          example: 10
+            example:
+              project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
+              token_id: 123456
+              is_explicit: true
+              metadata: 
+                certificate_id: ALTA/01/2022/01
+                full_name: David Boy
+                attributes:
+                  - trait_type: Math
+                    value: 10
+      responses:
+        "200":
+          description: Success
           content:
             application/json:
               schema:
                 type: object
-                required:
-                  - token_id
-                  - metadata
-                  - project_uid
                 properties:
-                  project_uid:
-                    $ref: "#/components/schemas/UUID"
-                  token_id:
+                  data:
+                    $ref: '#/components/schemas/NFT'
+                  message:
                     type: string
-                    nullable: true
-                    example: "123456"
-                  is_explicit:
-                    type: boolean
-                    example: true
-                  metadata:
-                    type: object
-                    nullable: true
-                    example:
-                      certificate_id: ALTA/01/2022/01
-                      full_name: David Boy
-                      image: external-link-url/image.png
-                    properties:
-                      certificate_id:
-                        type: string
-                        example: "ALTA/01/2022/01"
-                      full_name:
-                        type: string
-                        example: "David Boy"
-                      attributes:
-                        nullable: true
-                        type: object
-                        properties:
-                          trait_type:
-                            type: string
-                            example: "Math"
-                          value:
-                            anyOf:
-                              - type: string
-                              - type: number
-                              - type: integer
-                              - type: boolean
-                              - type: array
-                                items: {}
-                              - type: object
-                            example: 10
-              example:
-                project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
-                token_id: 123456
-                is_explicit: true
-                metadata: 
-                  name: ALTA/01/2022/01
-                  description: David Boy
-                  attributes:
-                    - trait_type: Math
-                      value: 10
-        responses:
-          "200":
-            description: Success
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/NFT'
-                    message:
-                      type: string
-                      example: success create project
-                    status:
-                      type: string
-                      example: success
+                    example: success create project
+                  status:
+                    type: string
+                    example: success
     get:
+        security:
+          - bearerAuth: []
         tags:
           - NFT
         summary: Get NFT List of Project
@@ -821,6 +848,8 @@ paths:
                       example: success                    
   /nfts/{nft_uid}:
     get:
+        security:
+          - bearerAuth: []
         tags:
           - NFT
         summary: Get Project NFT
@@ -845,6 +874,8 @@ paths:
                       type: string
                       example: success
     put:
+        security:
+          - bearerAuth: []  
         tags:
           - NFT
         summary: Update NFT of Project
@@ -927,6 +958,8 @@ paths:
                       type: string
                       example: success
     delete:
+        security:
+          - bearerAuth: []
         tags:
           - NFT
         summary: Delete Project NFT
@@ -950,6 +983,11 @@ paths:
                       example: success
 
 components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ID:
       type: number
@@ -980,6 +1018,8 @@ components:
         - contract_address
         - creator
       properties:
+        uid:
+          $ref: "#/components/schemas/UUID"
         creator:
           type: object
           properties:
@@ -988,10 +1028,6 @@ components:
             username:
               type: string
               example: "Alterra"
-        uid:
-          $ref: "#/components/schemas/UUID"
-        network_id:
-          $ref: "#/components/schemas/ID"
         name:
           type: string
           example: "Graduation 2022"
@@ -1001,13 +1037,15 @@ components:
         symbol:
           type: string
           example: "PFID"
-        nft_count:
-          type: number
-          example: 5
+        contract_image_url:
+          type: string
+          example: "https://example.com"
         contract_address:
-              type: string
-              nullable: true
-              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+          type: string
+          example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+        network_id:
+          $ref: "#/components/schemas/ID"
+        
     ProjectList:
       allOf:
         - $ref: '#/components/schemas/ProjectBase'
@@ -1034,23 +1072,30 @@ components:
         - $ref: '#/components/schemas/ProjectBase'
         - type: object
           required:
-            - contract_metadata
             - trx_hash
+            - contract_metadata
+            - nft_count
             - created_at
             - updated_at
           properties:
-            contract_metadata:
-              type: object
-              nullable: true
-              example:
-                certificate_id: "ALTA/01/2022/01"
-                full_name: "David Boy"
-                image: external-link-url/image.png
-                external_link: external-link-url
             trx_hash:
               type: string
-              nullable: true
-              example: null
+              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+            contract_metadata:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Graduation 2022"
+                description:
+                  type: string
+                  example: "Certificate of Graduation Class 2022"
+                image: 
+                  type: string
+                  example: "https://example.com/image"
+            nft_count:
+              type: number
+              example: 5
             created_at:
               $ref: "#/components/schemas/DateISO"
             updated_at:
