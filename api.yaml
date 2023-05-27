@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   contact: {}
 servers:
-  - url: "http://localhost:8081"
+  - url: "https://staging-certapi.2p5.io"
     description: NFT API
   - url: "https://staging-api.2p5.io"
     description: Staging Wallet Server
@@ -14,8 +14,6 @@ paths:
 # AUTH
   /auth/sign-in:
     servers:
-      - url: "http://localhost:8081"
-        description: NFT API
       - url: "https://staging-api.2p5.io"
         description: Staging Wallet Server
     post:
@@ -60,8 +58,6 @@ paths:
                     data: success
   /v2/auth/otp/verification/sign-in:
     servers:
-        - url: "http://localhost:8081"
-          description: NFT API
         - url: "https://staging-api.2p5.io"
           description: Staging Wallet Server
     post:
@@ -116,8 +112,6 @@ paths:
                     status: success
   /auth/pin/create:
     servers:
-      - url: "http://localhost:8081"
-        description: NFT API
       - url: "https://staging-api.2p5.io"
         description: Staging Wallet Server
     post:
@@ -162,11 +156,8 @@ paths:
                     status: success
   /v2/auth/refresh-token:
     servers:
-      - url: "http://localhost:8081"
-        description: NFT API
       - url: "https://staging-api.2p5.io"
         description: Staging Wallet Server
-      
     get:
       tags:
         - Auth
@@ -205,6 +196,9 @@ paths:
  
 # USER
   /users/me:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     patch:
       security:
         - bearerAuth: []
@@ -300,6 +294,9 @@ paths:
 
 # Verify
   /verify:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     get:
       tags:
         - Verify
@@ -366,6 +363,9 @@ paths:
       
 # Networks
   /networks:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     get:
       security:
         - bearerAuth: []
@@ -449,6 +449,9 @@ paths:
                           currency_decimals: 16
                           status: active
   /networks/{network_id}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     get:
       security:
         - bearerAuth: []
@@ -530,6 +533,9 @@ paths:
                       
 # Projects
   /projects:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     post:
         security:
           - bearerAuth: []
@@ -582,6 +588,9 @@ paths:
                       type: string
                       example: success
   /projects/me:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     get:
         security:
           - bearerAuth: []
@@ -623,6 +632,9 @@ paths:
                       type: string
                       example: success
   /projects/{project_uid}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     put:
         security:
           - bearerAuth: []
@@ -703,6 +715,9 @@ paths:
                       type: string
                       example: success
   /projects/{project_uid}/launch:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     post:
         security:
           - bearerAuth: []
@@ -732,6 +747,9 @@ paths:
 
 # NFTs
   /nfts:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     post:
       security:
         - bearerAuth: []
@@ -847,6 +865,9 @@ paths:
                       type: string
                       example: success                    
   /nfts/{nft_uid}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
     get:
         security:
           - bearerAuth: []
