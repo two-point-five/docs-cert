@@ -295,27 +295,31 @@ paths:
 # Verify
   /verify:
     servers:
-      - url: "https://staging-certapi.2p5.io"
+      - url: "http://localhost:8081"
         description: NFT API
-    get:
+    post:
+      security:
+        - bearerAuth: []
       tags:
         - Verify
       summary: Verify Certificate
       description: Verify Certificate
       operationId: verifyCertificate
-      parameters:
-        - in: query
-          name: certificate_id
-          required: true
-          schema:
-            type: string
-            example: "ALTA/01/2022/01"
-        - in: query
-          name: full_name
-          required: true
-          schema:
-            type: string
-            example: "David Boy"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                certificate_id:
+                  type: string
+                  example: "ALTA/01/2022/01"
+                full_name:
+                  type: string
+                  example: "David Boy"
+            example:
+              certificate_id: "ALTA/01/2022/01"
+              full_name: "David Boy"
       responses:
         "200":
           description: Success
