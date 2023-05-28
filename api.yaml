@@ -295,7 +295,7 @@ paths:
 # Verify
   /verify:
     servers:
-      - url: "http://localhost:8081"
+      - url: "https://staging-certapi.2p5.io"
         description: NFT API
     post:
       security:
