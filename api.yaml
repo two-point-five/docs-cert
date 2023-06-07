@@ -591,6 +591,42 @@ paths:
                     status:
                       type: string
                       example: success
+  /projects/{project_id}/image/signed-url:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: get upload project image signed url
+        description: Get upload project image signed url
+        operationId: getUploadProjectImageSignedUrl
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      required:
+                        - url
+                      properties:
+                        url:
+                          type: string
+                          example: external-link-url/image.png
+                    message:
+                      type: string
+                      example: success generate signed url
+                    status:
+                      type: string
+                      example: success
   /projects/me:
     servers:
       - url: "https://staging-certapi.2p5.io"
@@ -868,6 +904,43 @@ paths:
                     status:
                       type: string
                       example: success                    
+  /nfts/{nft_uid}/image/signed-url:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - NFT
+        summary: GET upload nft image signed url
+        description: Get upload nft image signed url
+        operationId: getUploadNFTImageSignedUrl
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDQuery"
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      required:
+                        - url
+                      properties:
+                        url:
+                          type: string
+                          example: external-link-url/image.png
+                    message:
+                      type: string
+                      example: success generate signed url
+                    status:
+                      type: string
+                      example: success
   /nfts/{nft_uid}:
     servers:
       - url: "https://staging-certapi.2p5.io"
