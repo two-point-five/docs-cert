@@ -1,0 +1,1334 @@
+openapi: 3.0.3
+info:
+  title: NFT Certificate
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: "https://staging-certapi.2p5.io"
+    description: NFT API
+  - url: "https://staging-api.2p5.io"
+    description: Staging Wallet Server
+    
+paths:
+  
+# AUTH
+  /auth/sign-in:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Staging Wallet Server
+    post:
+      tags:
+        - Auth
+      summary: Sign In
+      description: Sign In
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number:
+                  type: string
+                  example: "6285273839851"
+            example:
+              phone_number: "6285273839851"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  mesage:
+                    type: string
+                    example: OTP was sent to xx
+                  data:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    status: success
+                    message: success request OTP
+                    data: success
+  /v2/auth/otp/verification/sign-in:
+    servers:
+        - url: "https://staging-api.2p5.io"
+          description: Staging Wallet Server
+    post:
+      tags:
+        - Auth
+      summary: Verify OTP for Sign In
+      description: Verify OTP for Sign In
+      operationId: verifyOtpForSignIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: "315865"
+                phone_number:
+                  type: string
+                  example: "6285273839851"
+            example:
+              otp: "315865"
+              phone_number: "6285273839851"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: >-
+                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NDQzLCJpYXQiOjE2NzQ1NTM0NDN9.xYQJ3xB4PrRczGn_oYFhqrwwDulYfERpNGHE9g6zDd8
+                  message:
+                    type: string
+                    example: OTP is valid
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data:
+                      token: >-
+                        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NDQzLCJpYXQiOjE2NzQ1NTM0NDN9.xYQJ3xB4PrRczGn_oYFhqrwwDulYfERpNGHE9g6zDd8
+                    message: OTP is valid
+                    status: success
+  /auth/pin/create:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Staging Wallet Server
+    post:
+      tags:
+        - Auth
+      summary: Set PIN
+      description: Set PIN
+      operationId: setPin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pin:
+                  type: string
+                  example: "123456"
+            example:
+              pin: "123456"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: PIN is updated. Please refresh token
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data: null
+                    message: PIN is updated. Please refresh token
+                    status: success
+  /v2/auth/refresh-token:
+    servers:
+      - url: "https://staging-api.2p5.io"
+        description: Staging Wallet Server
+    get:
+      tags:
+        - Auth
+      summary: Refresh Token
+      description: Refresh Token
+      operationId: refreshToken
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: >-
+                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NTUwLCJpYXQiOjE2NzQ1NTM1NTB9._Kq6ydFHnT4h2rTMPJzXGe7f16nZOuV9yD5J-68Qs78
+                  message:
+                    type: string
+                    example: Token refreshed
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    data:
+                      token: >-
+                        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBob25lX251bWJlciI6IjYyODEyMzQ1Njc4OSIsInBpbiI6dHJ1ZSwiaXNzIjoiMnA1LmlvIiwiZXhwIjoxNjc3MTQ1NTUwLCJpYXQiOjE2NzQ1NTM1NTB9._Kq6ydFHnT4h2rTMPJzXGe7f16nZOuV9yD5J-68Qs78
+                    message: Token refreshed
+                    status: success
+ 
+# USER
+  /users/me:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Update Profile
+      description: Update Profile
+      operationId: updateUserOwnProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "johnDoe123"
+            example:
+              username: "johnDoe123"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success update profile
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success update profile
+                    status: success
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Get Profile
+      description: Get Profile
+      operationId: getUserOwnProfile
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      uid:
+                        $ref: "#/components/schemas/UUID"
+                      username:
+                        type: string
+                        example: johnDoe123
+                      remote_id:
+                        type: int
+                        example: 1
+                      phone_number:
+                        type: string
+                        example: "6285273839851"
+                      wallet_address:
+                        type: string
+                        example: "0x95D2B960138fc731D2a9D7D71067B279aCdd9fed"
+                      is_activated:
+                        type: bool
+                        example: false
+                  message:
+                    type: string
+                    example: success update profile
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get profile
+                    status: success
+                    data:
+                      uid: 0ujsswThIGTUYm2K8FjOOfXtY1K
+                      username: johnDoe123
+                      remote_id: 1
+                      phone_number: '6285273839851'
+                      wallet_address: '0x95D2B960138fc731D2a9D7D71067B279aCdd9fed'
+                      is_activated: false
+
+# Verify
+  /verify:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Verify
+      summary: Verify Certificate
+      description: Verify Certificate
+      operationId: verifyCertificate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                certificate_id:
+                  type: string
+                  example: "ALTA/01/2022/01"
+                full_name:
+                  type: string
+                  example: "David Boy"
+            example:
+              certificate_id: "ALTA/01/2022/01"
+              full_name: "David Boy"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      verified:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - status
+                            - contract_address
+                            - nft_uid
+                          properties:
+                            status:
+                              type: string
+                              example: "found"
+                            contract_address:
+                              type: string
+                              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+                            nft_uid:
+                              $ref: "#/components/schemas/UUID"
+                  message:
+                    type: string
+                    example: success certificate valid
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success certificate valid
+                    status: success
+                    data:
+                      verified:
+                        - status: 2
+                          contract_address: 0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF
+                          $ref: "#/components/schemas/UUID"
+      
+# Networks
+  /networks:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Network
+      summary: Get Networks
+      description: Get Networks
+      operationId: getNetworks
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      networks:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - id
+                            - img_url
+                            - currency_img_url
+                            - api_base_url
+                            - name
+                            - currency_name
+                            - currency_symbol
+                            - currency_decimals
+                            - status
+                          properties:
+                            id:
+                              $ref: "#/components/schemas/ID"
+                            img_url:
+                              type: string
+                              example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                            currency_img_url:
+                              type: string
+                              example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                            api_base_url:
+                              type: string
+                              example: https://staging-api.2p5.io
+                            name:
+                              type: string
+                              example: ethereum
+                            currency_name:
+                              type: string
+                              example: ether
+                            currency_symbol:
+                              type: string
+                              example: ETH
+                            currency_decimals:
+                              type: number
+                              example: 16
+                            status:
+                              type: string
+                              example: active
+                  message:
+                    type: string
+                    example: success get networks
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get networks
+                    status: success
+                    data:
+                      networks:
+                        - id: 2
+                          img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                          currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                          api_base_url: https://staging-api.2p5.io
+                          name: ethereum
+                          currency_name: ether
+                          currency_symbol: ETH
+                          currency_decimals: 16
+                          status: active
+  /networks/{network_id}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Network
+      summary: Get Network Detail
+      description: Get Network Detail
+      operationId: getNetworkDetail
+      parameters:
+        - $ref: "#/components/parameters/NetworkUID"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - id
+                      - img_url
+                      - currency_img_url
+                      - api_base_url
+                      - name
+                      - currency_name
+                      - currency_symbol
+                      - currency_decimals
+                      - status
+                    properties:
+                      id:
+                        $ref: "#/components/schemas/ID"
+                      img_url:
+                        type: string
+                        example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      currency_img_url:
+                        type: string
+                        example: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      api_base_url:
+                        type: string
+                        example: https://staging-api.2p5.io
+                      name:
+                        type: string
+                        example: ethereum
+                      currency_name:
+                        type: string
+                        example: ether
+                      currency_symbol:
+                        type: string
+                        example: ETH
+                      currency_decimals:
+                        type: number
+                        example: 16
+                      status:
+                        type: string
+                        example: active
+                  message:
+                    type: string
+                    example: success get networks
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Success:
+                  value:
+                    message: success get networks
+                    status: success
+                    data:
+                      id: 2
+                      img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      currency_img_url: https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/cdbe4/eth-diamond-black.webp
+                      api_base_url: https://staging-api.2p5.io
+                      name: ethereum
+                      currency_name: ether
+                      currency_symbol: ETH
+                      currency_decimals: 16
+                      status: active                      
+                      
+# Projects
+  /projects:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    post:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: Create Project
+        description: Create Project
+        operationId: createProject
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - description
+                  - symbol
+                  - network_id
+                properties:
+                  name:
+                    type: string
+                    example: "Graduation 2022"
+                  description:
+                    type: string
+                    example: "Certificate of Graduation Class 2022"
+                  symbol:
+                    type: string
+                    example: "GG2022"
+                  network_id:
+                    $ref: "#/components/schemas/ID"
+              example:
+                name: Graduation 2022
+                description: Certificate of Graduation Class 2022
+                symbol: GG2022
+                network_id: 1
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+  /projects/{project_id}/image/signed-url:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: get upload project image signed url
+        description: Get upload project image signed url
+        operationId: getUploadProjectImageSignedUrl
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      required:
+                        - url
+                      properties:
+                        url:
+                          type: string
+                          example: external-link-url/image.png
+                    message:
+                      type: string
+                      example: success generate signed url
+                    status:
+                      type: string
+                      example: success
+  /projects/me:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: Get User Project
+        description: Get User Project
+        operationId: getMyProject
+        parameters:
+          - $ref: "#/components/parameters/Page"
+          - $ref: "#/components/parameters/Limit"
+          - name: query_nft
+            in: query
+            description: Query nfts
+            schema:
+              type: number
+              default: 0
+              maximum: 10
+              example: 5
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        projects:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/ProjectList"
+                    message:
+                      type: string
+                      example: success get project
+                    status:
+                      type: string
+                      example: success
+  /projects/{project_uid}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    put:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: Update Project
+        description: Update Project
+        operationId: updateProjectDetail
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - description
+                  - symbol
+                  - network_id
+                properties:
+                  name:
+                    type: string
+                    example: "Graduation 2022"
+                  description:
+                    type: string
+                    example: "Certificate of Graduation Class 2022"
+                  symbol:
+                    type: string
+                    example: "GG2022"
+                  network_id:
+                    $ref: "#/components/schemas/ID"
+              example:
+                name: Graduation 2022
+                description: Certificate of Graduation Class 2022
+                symbol: GG2022
+                network_id: 2
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success update project
+                    status:
+                      type: string
+                      example: success
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: Get Project Detail
+        description: Get Project Detail
+        operationId: getProjectDetail
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success get project
+                    status:
+                      type: string
+                      example: success
+  /projects/{project_uid}/launch:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    post:
+        security:
+          - bearerAuth: []
+        tags:
+          - Project
+        summary: Launch Project
+        description: Launch Project
+        operationId: launchProject
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDPath"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/Project"
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success                      
+
+# NFTs
+  /nfts:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - NFT
+      summary: Create NFT of Project
+      description: Create NFT of Project
+      operationId: createProjectNFT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token_id
+                - metadata
+                - project_uid
+              properties:
+                project_uid:
+                  $ref: "#/components/schemas/UUID"
+                token_id:
+                  type: string
+                  nullable: true
+                  example: "123456"
+                is_explicit:
+                  type: boolean
+                  example: true
+                metadata:
+                  type: object
+                  nullable: true
+                  example:
+                    certificate_id: ALTA/01/2022/01
+                    full_name: David Boy
+                    image: external-link-url/image.png
+                  properties:
+                    certificate_id:
+                      type: string
+                      example: "ALTA/01/2022/01"
+                    full_name:
+                      type: string
+                      example: "David Boy"
+                    attributes:
+                      nullable: true
+                      type: object
+                      properties:
+                        trait_type:
+                          type: string
+                          example: "Math"
+                        value:
+                          anyOf:
+                            - type: string
+                            - type: number
+                            - type: integer
+                            - type: boolean
+                            - type: array
+                              items: {}
+                            - type: object
+                          example: 10
+            example:
+              project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
+              token_id: 123456
+              is_explicit: true
+              metadata: 
+                certificate_id: ALTA/01/2022/01
+                full_name: David Boy
+                attributes:
+                  - trait_type: Math
+                    value: 10
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NFT'
+                  message:
+                    type: string
+                    example: success create project
+                  status:
+                    type: string
+                    example: success
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - NFT
+        summary: Get NFT List of Project
+        description: Get NFT List of Project
+        operationId: getProjectNFTs
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDQuery"
+          - $ref: "#/components/parameters/Page"
+          - $ref: "#/components/parameters/Limit"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success                    
+  /nfts/{nft_uid}/image/signed-url:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - NFT
+        summary: GET upload nft image signed url
+        description: Get upload nft image signed url
+        operationId: getUploadNFTImageSignedUrl
+        parameters:
+          - $ref: "#/components/parameters/ProjectUIDQuery"
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      required:
+                        - url
+                      properties:
+                        url:
+                          type: string
+                          example: external-link-url/image.png
+                    message:
+                      type: string
+                      example: success generate signed url
+                    status:
+                      type: string
+                      example: success
+  /nfts/{nft_uid}:
+    servers:
+      - url: "https://staging-certapi.2p5.io"
+        description: NFT API
+    get:
+        security:
+          - bearerAuth: []
+        tags:
+          - NFT
+        summary: Get Project NFT
+        description: Get Project NFT
+        operationId: getProjectNFTDetail
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+    put:
+        security:
+          - bearerAuth: []  
+        tags:
+          - NFT
+        summary: Update NFT of Project
+        description: Update NFT of Project
+        operationId: updateProjectNFT
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token_id
+                  - metadata
+                  - project_uid
+                properties:
+                  token_id:
+                    type: string
+                    nullable: true
+                    example: "123456"
+                  is_explicit:
+                    type: boolean
+                    example: true
+                  metadata:
+                    type: object
+                    nullable: true
+                    example:
+                      certificate_id: ALTA/01/2022/01
+                      full_name: David Boy
+                      image: external-link-url/image.png
+                    properties:
+                      certificate_id:
+                        type: string
+                        example: "ALTA/01/2022/01"
+                      full_name:
+                        type: string
+                        example: "David Boy"
+                      attributes:
+                        nullable: true
+                        type: object
+                        properties:
+                          trait_type:
+                            type: string
+                            example: "Math"
+                          value:
+                            anyOf:
+                              - type: string
+                              - type: number
+                              - type: integer
+                              - type: boolean
+                              - type: array
+                                items: {}
+                              - type: object
+                            example: 10
+              example:
+                project_uid: "0ujsswThIGTUYm2K8FjOOfXtY1K"
+                token_id: 123456
+                is_explicit: true
+                metadata: 
+                  certificate_id: ALTA/01/2022/01
+                  full_name: David Boy
+                  attributes:
+                    - trait_type: Math
+                      value: 10
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NFT'
+                    message:
+                      type: string
+                      example: success create project
+                    status:
+                      type: string
+                      example: success
+    delete:
+        security:
+          - bearerAuth: []
+        tags:
+          - NFT
+        summary: Delete Project NFT
+        description: Delete Project NFT
+        operationId: deleteProjectNFT
+        parameters:
+          - $ref: "#/components/parameters/NFTUID"
+        responses:
+          "200":
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: success delete NFT
+                    status:
+                      type: string
+                      example: success
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ID:
+      type: number
+      description: SQL auto increment ID
+      example: 1
+    DateISO:
+      type: string
+      description: "ISO 8601"
+      example: "2011-06-20T14:48:00.000Z"
+    UUID:
+      type: string
+      example: 0ujsswThIGTUYm2K8FjOOfXtY1K
+    StateEnum:
+      type: string
+      description: >
+        State of record:
+          * `ACTIVE` - Active state
+          * `INACTIVE` - Inactive state
+      enum: ["ACTIVE", "INACTIVE"]
+      example: "ACTIVE"
+    ProjectBase:
+      type: object
+      required:
+        - uid
+        - name
+        - description
+        - symbol
+        - contract_address
+        - creator
+      properties:
+        uid:
+          $ref: "#/components/schemas/UUID"
+        creator:
+          type: object
+          properties:
+            uid:
+              $ref: "#/components/schemas/UUID"
+            username:
+              type: string
+              example: "Alterra"
+        name:
+          type: string
+          example: "Graduation 2022"
+        description:
+          type: string
+          example: "Certificate of Graduation Class 2022"
+        symbol:
+          type: string
+          example: "PFID"
+        contract_image_url:
+          type: string
+          example: "https://example.com"
+        contract_address:
+          type: string
+          example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+        network_id:
+          $ref: "#/components/schemas/ID"
+        
+    ProjectList:
+      allOf:
+        - $ref: '#/components/schemas/ProjectBase'
+        - type: object
+          required:
+            - nft_count
+          properties:
+            nft_count:
+              type: number
+              example: 5
+            nfts:
+              type: array
+              nullable: true
+              items:
+                type: object
+                properties:
+                  uid:
+                    $ref: "#/components/schemas/UUID"
+                  image_url:
+                    type: string
+                    example: external-link-url/image.png
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/ProjectBase'
+        - type: object
+          required:
+            - trx_hash
+            - contract_metadata
+            - nft_count
+            - created_at
+            - updated_at
+          properties:
+            trx_hash:
+              type: string
+              example: "0x95E5A887FDBf9d43412581e6fa62Ed518c9482cF"
+            contract_metadata:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Graduation 2022"
+                description:
+                  type: string
+                  example: "Certificate of Graduation Class 2022"
+                image: 
+                  type: string
+                  example: "https://example.com/image"
+            nft_count:
+              type: number
+              example: 5
+            created_at:
+              $ref: "#/components/schemas/DateISO"
+            updated_at:
+              $ref: "#/components/schemas/DateISO"
+    NFT:
+      type: object
+      required:
+        - uid
+        - token_id
+        - image_url
+        - metadata_json
+        - is_explicit
+      properties:
+        uid:
+          $ref: "#/components/schemas/UUID"
+        project_uid:
+          $ref: "#/components/schemas/UUID"
+        network_id:
+          $ref: "#/components/schemas/ID"
+        token_id:
+          type: string
+          nullable: true
+          example: "1234"
+        is_explicit:
+          type: boolean
+          example: true
+        metadata_json:
+          type: object
+          required:
+            - certificate_id
+            - full_name
+            - image
+            - attributes
+          properties:
+            certificate_id:
+              type: string
+              example: "ALTA/01/2022/01"
+            full_name:
+              type: string
+              example: "David Boy"
+            image:
+              type: string
+              example: external-link-url/image.png
+            attributes:
+              nullable: true
+              type: object
+              properties:
+                trait_type:
+                  type: string
+                  example: "Math"
+                value:
+                  anyOf:
+                    - type: string
+                    - type: number
+                    - type: integer
+                    - type: boolean
+                    - type: array
+                      items: {}
+                    - type: object
+                  example: 10
+          nullable: true
+          example:
+            certificate_id: ALTA/01/2022/01
+            full_name: David Boy
+            image: external-link-url/image.png
+            attributes:
+              - trait_type: Math
+                value: 10
+        project:
+          type: object
+          required:
+            - uid
+            - name
+          properties:
+            uid:
+              $ref: "#/components/schemas/UUID"
+            name:
+              type: string
+              example: "Project name"
+        created_at:
+          $ref: "#/components/schemas/DateISO"
+        updated_at:
+          $ref: "#/components/schemas/DateISO"
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page that should be returned
+      required: false
+      schema:
+        type: number
+        example: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      description: Number of objects to return
+      required: false
+      schema:
+        type: number
+        example: 20
+        default: 10
+        maximum: 50
+    ProjectUIDPath:
+      name: project_uid
+      in: path
+      description: Project UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    ProjectUIDQuery:
+      name: project_uid
+      in: query
+      description: Project UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    NFTUID:
+      name: nft_uid
+      in: path
+      description: NFT UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    NetworkUID:
+      name: network_id
+      in: path
+      description: Network ID
+      required: true
+      schema:
+        type: number
+        example: 1
+tags:
+  - name: Auth
+  - name: User
+  - name: Project
+  - name: NFT
+  - name: Network

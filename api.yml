@@ -1,0 +1,741 @@
+openapi: 3.0.3
+info:
+  title: Avatara Standalone B2B
+  description: Avatara Standalone B2B
+  version: 0.0.1
+  contact: {}
+servers:
+  - url: https://api.avatara.id/
+  - url: https://api-sandbox.avatara.id/b2b
+paths:
+  /auth:
+    post:
+      tags:
+        - Auth
+      summary: Get Token
+      description: Get or Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: hahahahahahasasa
+                remote_id: xxx
+      parameters:
+        - name: x-consumer-custom-id
+          in: header
+          schema:
+            type: string
+          example: tenantUID
+        - name: x-consumer-username
+          in: header
+          schema:
+            type: string
+          example: tenantSlug
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                token: xxzxzxzxzxzxzxz
+  /users:
+    get:
+      tags:
+        - Auth
+      summary: Get profile
+      description: Get profile
+      parameters:
+        - name: x-consumer-custom-id
+          in: header
+          schema:
+            type: string
+          example: tenantUID
+        - name: x-consumer-username
+          in: header
+          schema:
+            type: string
+          example: tenantSlug
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  uid: <string>
+                  username: <string>
+                  remote_id: <string>
+                  created_at: <string>
+                  updated_at: <string>
+                message: <string>
+                status: <string>
+  
+  /stars:
+    get:
+      tags:
+        - Star
+      summary: Get all star
+      description: Get all star
+      operationId: getAllStar
+      parameters:
+        - name: x-consumer-custom-id
+          in: header
+          schema:
+            type: string
+          example: tenantUID
+        - name: x-consumer-username
+          in: header
+          schema:
+            type: string
+          example: tenantSlug
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '10'
+        - name: category_id
+          in: query
+          schema:
+            type: string
+            example: '8'
+        - name: catalog
+          in: query
+          schema:
+            type: string
+            example: weekly-popular
+          description: featured,weekly-popular,new-release
+      responses:
+        '200':
+          description: Get all star
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        banner_pic:
+                          type: string
+                          example: >-
+                            https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        biography:
+                          type: string
+                          example: contoh
+                        category:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Anime
+                        description:
+                          type: string
+                          example: contoh
+                        name:
+                          type: string
+                          example: contoh
+                        profile_pic:
+                          type: string
+                          example: >-
+                            https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        social_link:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                example: instagram
+                              url:
+                                type: string
+                                example: https://instagram.com
+                          example:
+                            - name: instagram
+                              url: https://instagram.com
+                        uid:
+                          type: string
+                          example: 2SPdtY6dvcB9UM6Caqj40ouk0pd
+                    example:
+                      - banner_pic: >-
+                          https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        biography: contoh
+                        category:
+                          name: Anime
+                        description: contoh
+                        name: contoh
+                        profile_pic: >-
+                          https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        social_link:
+                          - name: instagram
+                            url: https://instagram.com
+                        uid: 2SPdtY6dvcB9UM6Caqj40ouk0pd
+                  message:
+                    type: string
+                    example: Success Get Star Data
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Get all star:
+                  value:
+                    data:
+                      - banner_pic: >-
+                          https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        biography: contoh
+                        category:
+                          name: Anime
+                        description: contoh
+                        name: contoh
+                        profile_pic: >-
+                          https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
+                        social_link:
+                          - name: instagram
+                            url: https://instagram.com
+                        uid: 2SPdtY6dvcB9UM6Caqj40ouk0pd
+                    message: Success Get Star Data
+                    status: success
+      security:
+        - {}
+  /stars/search:
+    get:
+      tags:
+        - Star
+      summary: Search star
+      description: Search star
+      operationId: searchStar
+      parameters:
+        - name: x-consumer-custom-id
+          in: header
+          schema:
+            type: string
+          example: tenantUID
+        - name: x-consumer-username
+          in: header
+          schema:
+            type: string
+          example: tenantSlug
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '10'
+        - name: category_id
+          in: query
+          schema:
+            type: string
+            example: '2'
+        - name: status
+          in: query
+          schema:
+            type: string
+            example: inactive
+        - name: q
+          in: query
+          schema:
+            type: string
+            example: bot
+      responses:
+        '200':
+          description: Get all star
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        banner_pic:
+                          type: string
+                          example: >-
+                            https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/banner
+                        category:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                              example: 1
+                            name:
+                              type: string
+                              example: test
+                        name:
+                          type: string
+                          example: Rezi Bot
+                        profile_pic:
+                          type: string
+                          example: >-
+                            https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/avatar
+                        status:
+                          type: string
+                          example: active
+                        uid:
+                          type: string
+                          example: 2UVvFD03r5LYZ0imAf497TMeV7R
+                    example:
+                      - banner_pic: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/banner
+                        category:
+                          id: 1
+                          name: test
+                        name: Rezi Bot
+                        profile_pic: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/avatar
+                        status: active
+                        uid: 2UVvFD03r5LYZ0imAf497TMeV7R
+                  message:
+                    type: string
+                    example: Success Get Star
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Get all star:
+                  value:
+                    data:
+                      - banner_pic: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/banner
+                        category:
+                          id: 1
+                          name: test
+                        name: Rezi Bot
+                        profile_pic: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/avatar
+                        status: active
+                        uid: 2UVvFD03r5LYZ0imAf497TMeV7R
+                    message: Success Get Star
+                    status: success
+      security:
+        - {}
+  /stars/{starUID}:
+    get:
+      tags:
+        - Star
+      summary: Get star by UID
+      description: Get star by UID
+      operationId: getStarByUid
+      responses:
+        '200':
+          description: Get star by UID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      banner_pic:
+                        type: string
+                        example: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/banner
+                      biography:
+                        type: string
+                        example: aaa
+                      bot:
+                        type: object
+                        properties:
+                          greeting_msg:
+                            type: string
+                            example: a
+                          reset_msg:
+                            type: string
+                            example: a
+                          uid:
+                            type: string
+                            example: 2UVvFEv0Ry3apdkLPDDUIgIKsyU
+                      category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                            example: 1
+                          name:
+                            type: string
+                            example: test
+                          status:
+                            type: string
+                            example: ''
+                      chat_count:
+                        type: number
+                        example: 29
+                      description:
+                        type: string
+                        example: aaa
+                      name:
+                        type: string
+                        example: Rezi Bot
+                      profile_pic:
+                        type: string
+                        example: >-
+                          https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/avatar
+                      status:
+                        type: string
+                        example: active
+                      uid:
+                        type: string
+                        example: 2UVvFD03r5LYZ0imAf497TMeV7R
+                  message:
+                    type: string
+                    example: Success Get Star
+                  status:
+                    type: string
+                    example: success
+              examples:
+                Get star by UID:
+                  value:
+                    data:
+                      banner_pic: >-
+                        https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/banner
+                      biography: aaa
+                      bot:
+                        greeting_msg: a
+                        reset_msg: a
+                        uid: 2UVvFEv0Ry3apdkLPDDUIgIKsyU
+                      category:
+                        id: 1
+                        name: test
+                        status: ''
+                      chat_count: 29
+                      description: aaa
+                      name: Rezi Bot
+                      profile_pic: >-
+                        https://avatara-assets-staging.s3.ap-southeast-3.amazonaws.com/stars/2UVvFD03r5LYZ0imAf497TMeV7R/avatar
+                      status: active
+                      uid: 2UVvFD03r5LYZ0imAf497TMeV7R
+                    message: Success Get Star
+                    status: success
+      security:
+        - {}
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: starUID
+        in: path
+        required: true
+        schema:
+          type: string
+  /conversations:
+    get:
+      tags:
+        - Conversation
+      summary: Get My Conversation By star
+      description: Get My Conversation By star
+      operationId: getMyConversationByStar
+      parameters:
+        - name: x-consumer-custom-id
+          in: header
+          schema:
+            type: string
+          example: tenantUID
+        - name: x-consumer-username
+          in: header
+          schema:
+            type: string
+          example: tenantSlug
+        - name: star_uid
+          in: query
+          schema:
+            type: string
+            example: 2UQICvNcug5G0jt0gwC83lHURG7
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Conversation
+      summary: Create conversation
+      description: Create conversation
+      operationId: createConversation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                star_uid:
+                  type: string
+                  example: 2UVvFD03r5LYZ0imAf497TMeD2t
+            examples:
+              Create conversation:
+                value:
+                  star_uid: 2UVvFD03r5LYZ0imAf497TMeD2t
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /conversations/{conversation_uid}/reset:
+    post:
+      tags:
+        - Conversation
+      summary: Reset conversation
+      description: Reset conversation
+      operationId: resetConversation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                star_uid:
+                  type: string
+                  example: 2UVvFD03r5LYZ0imAf497TMeD2t
+            examples:
+              Reset conversation:
+                value:
+                  star_uid: 2UVvFD03r5LYZ0imAf497TMeD2t
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: conversation_uid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+  /conversations/{conversation_uid}/chat:
+    post:
+      tags:
+        - Conversation
+      summary: Streaming conversation
+      description: Streaming conversation
+      operationId: streamingConversation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Haloo?
+            examples:
+              Streaming conversation:
+                value:
+                  message: Haloo?
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: conversation_uid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+  /conversations/{conversation_uid}/messages:
+    get:
+      tags:
+        - Conversation
+      summary: Get conversation message
+      description: Get conversation message
+      operationId: getConversationMessage
+      parameters:
+        - name: last_message_uid
+          in: query
+          schema:
+            type: string
+            example: 2UVvFD03r5LYZ0imAf497TMeD2t
+        - name: limit
+          in: query
+          schema:
+            type: string
+            example: '25'
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+          description: Not used when using sort_by and cursor
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            example: created_at.desc
+          description: 'Allowed value: created_at.desc'
+        - name: cursor
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: conversation_uid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+  /metered/conversations/{conversation_uid}/chat/streaming:
+    post:
+      tags:
+        - Conversation
+      summary: Get Chat Reply Streaming
+      description: Get Streaming reply to a conversation
+      operationId: chat_stream_reply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Haloo"
+            examples:
+              Create conversation:
+                value:
+                  message: "Haloo"
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: conversation_uid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+  /metered/conversations/{conversation_uid}/chat:
+    post:
+      tags:
+        - Conversation
+      summary: Get Chat Reply
+      description: Get chat reply to a conversation
+      operationId: chat_reply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Haloo"
+            examples:
+              Create conversation:
+                value:
+                  message: "Haloo"
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
+      - name: conversation_uid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Star
+  - name: Conversation
