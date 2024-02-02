@@ -5,7 +5,7 @@ info:
   version: 0.0.1
   contact: {}
 servers:
-  - url: https://api-sandbox.avatara.id/b2b
+  - url: https://api-sandbox.avatara.id
 paths:
   /auth:
     post:
@@ -19,8 +19,8 @@ paths:
             schema:
               type: object
               example:
-                username: hahahahahahasasa
-                remote_id: xxx
+                username: user_name
+                remote_id: remoteID
       parameters:
         - name: x-consumer-custom-id
           in: header
