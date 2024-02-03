@@ -503,6 +503,17 @@ paths:
           description: ''
       security:
         - bearerAuth: []
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
   /conversations/{conversation_uid}/reset:
     post:
       tags:
@@ -545,6 +556,17 @@ paths:
         schema:
           type: string
           example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+    parameters:
+      - name: x-consumer-custom-id
+        in: header
+        schema:
+          type: string
+        example: tenantUID
+      - name: x-consumer-username
+        in: header
+        schema:
+          type: string
+        example: tenantSlug
   /conversations/{conversation_uid}/chat:
     post:
       tags:
