@@ -217,7 +217,7 @@ paths:
                     message: Success Get Star Data
                     status: success
       security:
-        - {}
+        - bearerAuth: []
   /stars/search:
     get:
       tags:
@@ -334,7 +334,7 @@ paths:
                     message: Success Get Star
                     status: success
       security:
-        - {}
+        - bearerAuth: []
   /stars/{starUID}:
     get:
       tags:
@@ -434,7 +434,7 @@ paths:
                     message: Success Get Star
                     status: success
       security:
-        - {}
+        - bearerAuth: []
     parameters:
       - name: x-consumer-custom-id
         in: header
@@ -567,48 +567,6 @@ paths:
         schema:
           type: string
         example: tenantSlug
-  /conversations/{conversation_uid}/chat:
-    post:
-      tags:
-        - Conversation
-      summary: Streaming conversation
-      description: Streaming conversation
-      operationId: streamingConversation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Haloo?
-            examples:
-              Streaming conversation:
-                value:
-                  message: Haloo?
-      responses:
-        '200':
-          description: ''
-      security:
-        - bearerAuth: []
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: conversation_uid
-        in: path
-        required: true
-        schema:
-          type: string
-          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
   /conversations/{conversation_uid}/messages:
     get:
       tags:
@@ -649,48 +607,6 @@ paths:
       security:
         - bearerAuth: []
     parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: conversation_uid
-        in: path
-        required: true
-        schema:
-          type: string
-          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
-  /metered/conversations/{conversation_uid}/chat/streaming:
-    post:
-      tags:
-        - Conversation
-      summary: Get Chat Reply Streaming
-      description: Get Streaming reply to a conversation
-      operationId: chat_stream_reply
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: "Haloo"
-            examples:
-              Create conversation:
-                value:
-                  message: "Haloo"
-      responses:
-        '200':
-          description: ''
-      security:
-        - bearerAuth: []
-      parameters:
       - name: x-consumer-custom-id
         in: header
         schema:
