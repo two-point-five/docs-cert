@@ -1,37 +1,40 @@
 openapi: 3.0.3
 info:
-  title: Avatara Standalone B2B
-  description: Avatara Standalone B2B
+  title: Avatara B2B API
+  description: Avatara B2B API
   version: 0.0.1
   contact: {}
 servers:
-  - url: https://api-sandbox.avatara.id
+  - url: https://api-sandbox.avatara.id/b2b
+    description: Sandbox
 paths:
   /auth:
     post:
       tags:
         - Auth
-      summary: Get Token
-      description: Get or Create user
+      summary: Upsert User & Get Token
+      description: Get or Create user and get token for authentication. JWT is returned in response body. The JWT can be used in HTTP header as bearer token
+      security:
+        - apiKeyAuth: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                username: user_name
-                remote_id: remoteID
-      parameters:
-        - name: x-consumer-custom-id
-          in: header
-          schema:
-            type: string
-          example: tenantUID
-        - name: x-consumer-username
-          in: header
-          schema:
-            type: string
-          example: tenantSlug
+              required:
+                - username
+                - remote_id
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 25
+                  description: alphanumeric and underscore
+                  example: john_doe
+                remote_id:
+                  type: string
+                  description: client user identifier
+                  example: "12"
       responses:
         '200':
           description: OK
@@ -44,6 +47,11 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT for authentication in header
+                    example: xxzxzxzxzxzxzxz
               example:
                 token: xxzxzxzxzxzxzxz
   /users:
@@ -51,18 +59,10 @@ paths:
       tags:
         - Auth
       summary: Get profile
-      description: Get profile
-      parameters:
-        - name: x-consumer-custom-id
-          in: header
-          schema:
-            type: string
-          example: tenantUID
-        - name: x-consumer-username
-          in: header
-          schema:
-            type: string
-          example: tenantSlug
+      description: Get user profile
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
       responses:
         '200':
           description: OK
@@ -84,25 +84,16 @@ paths:
                   updated_at: <string>
                 message: <string>
                 status: <string>
-  
   /stars:
     get:
       tags:
         - Star
       summary: Get all star
-      description: Get all star
       operationId: getAllStar
+      description: Get all star
+      security:
+        - apiKeyAuth: []
       parameters:
-        - name: x-consumer-custom-id
-          in: header
-          schema:
-            type: string
-          example: tenantUID
-        - name: x-consumer-username
-          in: header
-          schema:
-            type: string
-          example: tenantSlug
         - name: page
           in: query
           schema:
@@ -147,6 +138,9 @@ paths:
                         category:
                           type: object
                           properties:
+                            id:
+                              type: number
+                              example: 1
                             name:
                               type: string
                               example: Anime
@@ -205,6 +199,7 @@ paths:
                           https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png
                         biography: contoh
                         category:
+                          id: 1
                           name: Anime
                         description: contoh
                         name: contoh
@@ -216,8 +211,8 @@ paths:
                         uid: 2SPdtY6dvcB9UM6Caqj40ouk0pd
                     message: Success Get Star Data
                     status: success
-      security:
-        - bearerAuth: []
+      # security:
+        # - {}
   /stars/search:
     get:
       tags:
@@ -225,6 +220,8 @@ paths:
       summary: Search star
       description: Search star
       operationId: searchStar
+      security:
+        - apiKeyAuth: []
       parameters:
         - name: x-consumer-custom-id
           in: header
@@ -333,8 +330,6 @@ paths:
                         uid: 2UVvFD03r5LYZ0imAf497TMeV7R
                     message: Success Get Star
                     status: success
-      security:
-        - bearerAuth: []
   /stars/{starUID}:
     get:
       tags:
@@ -342,6 +337,14 @@ paths:
       summary: Get star by UID
       description: Get star by UID
       operationId: getStarByUid
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: starUID
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/KSUID"
       responses:
         '200':
           description: Get star by UID
@@ -433,24 +436,6 @@ paths:
                       uid: 2UVvFD03r5LYZ0imAf497TMeV7R
                     message: Success Get Star
                     status: success
-      security:
-        - bearerAuth: []
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: starUID
-        in: path
-        required: true
-        schema:
-          type: string
   /conversations:
     get:
       tags:
@@ -458,33 +443,51 @@ paths:
       summary: Get My Conversation By star
       description: Get My Conversation By star
       operationId: getMyConversationByStar
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
       parameters:
-        - name: x-consumer-custom-id
-          in: header
-          schema:
-            type: string
-          example: tenantUID
-        - name: x-consumer-username
-          in: header
-          schema:
-            type: string
-          example: tenantSlug
         - name: star_uid
           in: query
           schema:
-            type: string
-            example: 2UQICvNcug5G0jt0gwC83lHURG7
+            $ref: "#/components/schemas/KSUID"
       responses:
         '200':
-          description: ''
-      security:
-        - bearerAuth: []
+          description: 'success get conversation'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - uid
+                        - star
+                      properties:
+                        uid:
+                          $ref: "#/components/schemas/KSUID"
+                        last_message_uid:
+                          $ref: "#/components/schemas/KSUID"
+                  message:
+                    type: string
+                    example: Success Get User Conversations
+                  status:
+                    type: string
+                    example: success
+
+      
     post:
       tags:
         - Conversation
       summary: Create conversation
       description: Create conversation
       operationId: createConversation
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -492,28 +495,48 @@ paths:
               type: object
               properties:
                 star_uid:
-                  type: string
-                  example: 2UVvFD03r5LYZ0imAf497TMeD2t
+                  $ref: "#/components/schemas/KSUID"
             examples:
               Create conversation:
                 value:
                   star_uid: 2UVvFD03r5LYZ0imAf497TMeD2t
       responses:
-        '200':
-          description: ''
-      security:
-        - bearerAuth: []
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: success create conversation
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uid:
+                          $ref: "#/components/schemas/KSUID"
+                        session_uid:
+                          $ref: "#/components/schemas/KSUID"
+                        messages:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/ConversationMessage"
+                  pagination:
+                    type: object
+                    properties:
+                      next_cursor:
+                        type: string
+                        example: eyJpZCI6IiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAyLTAyVDAzOjAyOjQ0LjY0MVoiLCJwb2ludHNfbmV4dCI6dHJ1ZX0=
   /conversations/{conversation_uid}/reset:
     post:
       tags:
@@ -521,6 +544,11 @@ paths:
       summary: Reset conversation
       description: Reset conversation
       operationId: resetConversation
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ConversationUID"
       requestBody:
         content:
           application/json:
@@ -535,38 +563,43 @@ paths:
                 value:
                   star_uid: 2UVvFD03r5LYZ0imAf497TMeD2t
       responses:
-        '200':
-          description: ''
-      security:
-        - bearerAuth: []
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: conversation_uid
-        in: path
-        required: true
-        schema:
-          type: string
-          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: success reset conversation
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uid:
+                          $ref: "#/components/schemas/KSUID"
+                        session_uid:
+                          $ref: "#/components/schemas/KSUID"
+                        messages:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/ConversationMessage"
+                  pagination:
+                    type: object
+                    properties:
+                      next_cursor:
+                        type: string
+                        example: eyJpZCI6IiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAyLTAyVDAzOjAyOjQ0LjY0MVoiLCJwb2ludHNfbmV4dCI6dHJ1ZX0=
+
   /conversations/{conversation_uid}/messages:
     get:
       tags:
@@ -574,12 +607,11 @@ paths:
       summary: Get conversation message
       description: Get conversation message
       operationId: getConversationMessage
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
       parameters:
-        - name: last_message_uid
-          in: query
-          schema:
-            type: string
-            example: 2UVvFD03r5LYZ0imAf497TMeD2t
+        - $ref: "#/components/parameters/ConversationUID"
         - name: limit
           in: query
           schema:
@@ -602,34 +634,54 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: ''
-      security:
-        - bearerAuth: []
-    parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: conversation_uid
-        in: path
-        required: true
-        schema:
-          type: string
-          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
-  /metered/conversations/{conversation_uid}/chat:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: success get conversation messages
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uid:
+                          $ref: "#/components/schemas/KSUID"
+                        session_uid:
+                          $ref: "#/components/schemas/KSUID"
+                        messages:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/ConversationMessage"
+                  pagination:
+                    type: object
+                    properties:
+                      next_cursor:
+                        type: string
+                        example: eyJpZCI6IiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAyLTAyVDAzOjAyOjQ0LjY0MVoiLCJwb2ludHNfbmV4dCI6dHJ1ZX0=
+  /metered/conversations/{conversation_uid}/chat/streaming:
     post:
       tags:
         - Conversation
-      summary: Get Chat Reply
-      description: Get chat reply to a conversation
-      operationId: chat_reply
+      summary: Get Chat Reply Streaming
+      description: Get Streaming reply to a conversation
+      operationId: chat_stream_reply
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ConversationUID"
       requestBody:
         content:
           application/json:
@@ -645,34 +697,297 @@ paths:
                   message: "Haloo"
       responses:
         '200':
-          description: ''
-      security:
-        - bearerAuth: []
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >+
+                data: {"message_uid":null,"content":"This is warning message","message_type":"warning"}
+
+                data:
+                {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":"","message_type":"ai"}
+
+                data:
+                {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":"H","message_type":"ai"}
+
+                data:
+                {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":"alo","message_type":"ai"}
+
+                data: {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":"Alice","message_type":"ai"}
+
+                data:
+                {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":".","message_type":"ai"}
+
+                data:
+                {"message_uid":"2UhpILLr5HbYOCYN4QTmCzsTR36","content":"","message_type":"ai"}
+
+                data: [DONE]
+  /metered/conversations/{conversation_uid}/chat:
+    post:
+      tags:
+        - Conversation
+      summary: Get Chat Reply
+      description: Get chat reply to a conversation
+      operationId: chat_reply
       parameters:
-      - name: x-consumer-custom-id
-        in: header
-        schema:
-          type: string
-        example: tenantUID
-      - name: x-consumer-username
-        in: header
-        schema:
-          type: string
-        example: tenantSlug
-      - name: conversation_uid
+        - $ref: "#/components/parameters/ConversationUID"
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Haloo"
+            examples:
+              Create conversation:
+                value:
+                  message: "Haloo"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: success get conversation messages
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      message_uid:
+                        $ref: "#/components/schemas/KSUID"
+                      content:
+                        type: string
+                        example: "Haloo, John Doe! Ada apa nihh? 😊"
+                      message_detail:
+                        type: object
+                        nullable: true
+                        example: null
+
+  /conversations/{conversation_uid}/voice-note:
+    post:
+      tags:
+        - Conversation
+      summary: get reply voice from text
+      description: conversation text with voice
+      operationId: get_reply_with_voice
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ConversationUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Haloo?
+            examples:
+              Streaming conversation:
+                value:
+                  message: Haloo?
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: Success request voice note
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    nullable: true
+                    example: null
+
+  /conversations/{conversation_uid}/voice-note/audio:
+    post:
+      tags:
+        - Conversation
+      summary: conversation audio to audio
+      description: conversation audio to audio
+      operationId: get_reply_with_voice_from_audio
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ConversationUID"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+                transcription:
+                  type: string
+                duration:
+                  type: integer
+                reply_type:
+                  type: string
+                  enum: [text, audio]
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - status
+                  - data
+                properties:
+                  message:
+                    type: string
+                    example: Success request voice note
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    nullable: true
+                    example: null
+
+  /conversations/{conversation_uid}/messages/{msg_uid}/audio:
+    get:
+      tags:
+        - Conversation
+      summary: get audio from msg uid
+      description: "Get audio file from msg uid. Notes: File response is not supported in browser. Please use CuRL to try the endpoint"
+      operationId: get_audio_from_msg_uid
+      parameters:
+      - $ref: "#/components/parameters/ConversationUID"
+      - name: msg_uid
         in: path
         required: true
         schema:
-          type: string
-          example: 2WNDgWxyASUVo7sW3cHu2iOK90k
+          $ref: "#/components/schemas/KSUID"
+      responses:
+        '200':
+          description: ''
+      security:
+        - apiKeyAuth: []
+          bearerAuth: []
+
 components:
+  schemas:
+    DateISO:
+      type: string
+      description: "ISO 8601"
+      example: "2011-06-20T14:48:00.000Z"
+    KSUID:
+      type: string
+      example: 0ujsswThIGTUYm2K8FjOOfXtY1K
+    ConversationMessage:
+      type: object
+      properties:
+        uid:
+          $ref: "#/components/schemas/KSUID"
+        content:
+          type: string
+          example: Haloo?
+        sender:
+          type: string
+          enum:
+            - ai
+            - human
+          example: ai
+        created_at:
+          $ref: "#/components/schemas/DateISO"
+        msg_type:
+          type: string
+          enum:
+            - text
+            - audio
+            - gift
+        message_detail:
+          type: object
+          properties:
+            say:
+              type: string
+              example: Haloo?
+            thought:
+              type: string
+              example: Aku senang sekali
+            expr:
+              type: string
+              example: Terseyum
+            action:
+              type: string
+              example: api_call
+  parameters:
+    ConversationUID:
+      name: conversation_uid
+      in: path
+      description: Conversation UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/KSUID"
+    StarUID:
+      name: star_uid
+      in: path
+      description: Star UID
+      required: true
+      schema:
+        $ref: "#/components/schemas/KSUID"
+    Page:
+      name: page
+      in: query
+      description: Page that should be returned
+      required: false
+      schema:
+        type: number
+        example: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      description: Number of objects to return
+      required: false
+      schema:
+        type: number
+        example: 20
+        default: 10
+        maximum: 50
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-security:
-  - bearerAuth: []
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+
 tags:
   - name: Auth
   - name: Star
-  - name: Conversation
+  - name: Conversation 
