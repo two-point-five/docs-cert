@@ -7,6 +7,9 @@ info:
 servers:
   - url: https://api-sandbox.avatara.id/b2b
     description: Sandbox
+  - url: https://staging-b2b-api.avatara.id
+    description: Staging avatara id
+  
 paths:
   /auth:
     post:
